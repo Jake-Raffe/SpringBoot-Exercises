@@ -46,7 +46,8 @@ public class CarService {
     public void updateCar(Integer id, Car update){
         int result = carDAO.updateCar(id, update);
         if (result != 1){
-            throw new IllegalStateException("Could not delete car");
+            throw new IllegalStateException("Could not update car");
         }
     }
+
 }

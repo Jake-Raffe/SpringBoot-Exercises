@@ -3,6 +3,7 @@ package com.bnta.hellospringboot.garage;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository("postgres")
@@ -38,16 +39,30 @@ public class CarDAS implements CarDAO {
 
     @Override
     public List<Car> selectAllCars() {
-        return null;
+        return jdbcTemplate.query("""
+                SELECT * FROM cars
+                """,
+                (rs, rowNum) ->
+                    new Car(
+                            rs.getInt("id"),
+                            rs.getString("brand"),
+                            rs.getInt("price"))
+                    );
     }
 
     @Override
     public int deleteCar(Car car) {
-        return 0;
+        return jdbcTemplate.update(
+                """
+                        DELETE FROM cars WHERE id = ?
+                        """, car.getId());
     }
 
     @Override
     public int updateCar(Integer id, Car update) {
-        return 0;
+        return jdbcTemplate.update(
+                """
+                        UPDATE cars SET (brand, price) = (?,?) WHERE id = ?""",
+                update.getBrand(), update.getPrice(), id);
     }
 }
